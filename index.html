@@ -645,6 +645,19 @@
     resetAutofillState();
   }
 
+  // Borra por completo cualquier rastro del cliente/NIC anterior: nombre, tarifa, los consumos
+  // que se hubieran autocompletado, y cualquier resultado o gráfica ya calculada con esos datos.
+  // Se usa tanto al vaciar el campo NIC como justo antes de buscar un NIC distinto, para que
+  // nunca quede mezclada información de dos contratos.
+  function clearClienteDependentFields(){
+    clearClienteInfo();
+    inputConsAnt.value = '';
+    inputConsAct.value = '';
+    resultsSection.hidden = true;
+    hasCalculated = false;
+    errorMsg.hidden = true;
+  }
+
   // La base de clientes guarda "Apellidos Nombres" (convención dominicana: 2 apellidos + 1-2 nombres).
   // Esta función reordena a "Nombres Apellidos" para mostrarlo en el orden natural de lectura.
   function reorderNombre(nombreCompleto){
@@ -702,10 +715,24 @@
   inputContrato.addEventListener('input', function(){
     var v = inputContrato.value.trim();
     if (clienteLookupTimer) clearTimeout(clienteLookupTimer);
+
+    if (v === ''){
+      // NIC vacío: se limpia de inmediato todo lo que dependía del cliente anterior.
+      clearClienteDependentFields();
+      return;
+    }
+
     if (!/^[0-9]{6,7}$/.test(v)){
+      // Formato incompleto/ inválido mientras se escribe: solo se oculta la tarjeta de
+      // cliente, sin borrar consumos (el agente podría estar corrigiendo un dígito).
       clearClienteInfo();
       return;
     }
+
+    // Se cambió a un NIC distinto: se borra primero todo lo del cliente anterior (nombre,
+    // tarifa, consumos autocompletados y resultados ya calculados) para que nunca se mezcle
+    // con la búsqueda nueva, y luego se busca el cliente correspondiente al NIC actual.
+    clearClienteDependentFields();
     clienteLookupTimer = setTimeout(function(){ lookupCliente(v); }, 300);
   });
 
