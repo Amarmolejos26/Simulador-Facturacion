@@ -1,0 +1,951 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora Comparativa de Facturación BTS-1 — Edesur Dominicana</title>
+<style>
+  :root{
+    color-scheme: light;
+    --blue-900:#083567;
+    --blue-800:#0F1D41;
+    --blue-700:#123A6E;
+    --blue-600:#1B57A6;
+    --blue-100:#E8EEFB;
+    --blue-50:#F3F6FC;
+    --orange-600:#FD6B0E;
+    --orange-500:#FF8B3D;
+    --orange-100:#FFEEDD;
+    --bg:#F2F5FA;
+    --card:#FFFFFF;
+    --text:#152238;
+    --text-muted:#5C6B84;
+    --border:#E1E7F0;
+    --success:#1E9E5A;
+    --success-bg:#E8F8EF;
+    --danger:#D8382A;
+    --danger-bg:#FDEAE8;
+    --radius-lg:18px;
+    --radius-md:12px;
+    --shadow: 0 6px 20px rgba(13,35,80,0.08);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#0B1220;
+      --card:#141D2E;
+      --text:#EAF0FB;
+      --text-muted:#93A2BC;
+      --border:#243146;
+      --blue-100:#16233F;
+      --blue-50:#101A2E;
+      --orange-100:#2E2013;
+      --success-bg:#0F2A1D;
+      --danger-bg:#331714;
+      --shadow: 0 6px 20px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#0B1220;
+    --card:#141D2E;
+    --text:#EAF0FB;
+    --text-muted:#93A2BC;
+    --border:#243146;
+    --blue-100:#16233F;
+    --blue-50:#101A2E;
+    --orange-100:#2E2013;
+    --success-bg:#0F2A1D;
+    --danger-bg:#331714;
+    --shadow: 0 6px 20px rgba(0,0,0,0.35);
+  }
+  *{box-sizing:border-box;}
+  [hidden]{display:none !important;}
+  img{max-width:100%;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:980px;margin:0 auto;padding:0 16px 48px;}
+
+  /* Topbar */
+  .topbar-strip{
+    background:#083567;
+    color:#fff;
+    text-align:center;
+    font-size:11.5px;
+    font-weight:600;
+    letter-spacing:.02em;
+    padding:7px 14px;
+    padding-top:calc(7px + env(safe-area-inset-top,0px));
+  }
+  .topbar-main{
+    background:#ffffff;
+    padding:14px 16px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 10px rgba(15,29,65,0.10);
+    border-bottom:3px solid var(--orange-600);
+  }
+  .brand{display:flex;flex-direction:column;gap:2px;max-width:948px;width:100%;}
+  .brand-row{display:flex;align-items:center;gap:8px;}
+  .logo-img{height:40px;width:auto;display:block;}
+  .brand-caption{font-size:10.5px;color:var(--text-muted);font-weight:600;letter-spacing:.02em;margin-left:2px;}
+
+  .hero{text-align:center;padding:28px 8px 6px;}
+  .hero h1{
+    margin:0 0 6px;
+    font-size:clamp(20px,4.5vw,28px);
+    color:var(--blue-800);
+    font-weight:800;
+    letter-spacing:-.01em;
+  }
+  :root[data-theme="dark"] .hero h1, @media (prefers-color-scheme:dark){ }
+  .hero .subtitle{
+    margin:0;
+    color:var(--orange-600);
+    font-weight:700;
+    font-size:15px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:20px;
+    margin-top:16px;
+  }
+  .card-title{
+    margin:0 0 14px;
+    font-size:15px;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--blue-700);
+  }
+  :root[data-theme="dark"] .card-title{color:#7FA8FF;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .card-title{color:#7FA8FF;} }
+  .card-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .card-title-row .card-title{margin:0;}
+
+  .examples-row{display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:16px;}
+  .btn-link{
+    background:none;border:none;padding:0;color:var(--blue-700);
+    font-weight:700;font-size:13.5px;cursor:pointer;text-decoration:underline;
+    text-underline-offset:3px;
+  }
+  :root[data-theme="dark"] .btn-link{color:#7FA8FF;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .btn-link{color:#7FA8FF;} }
+
+  form .field{margin-bottom:14px;display:flex;flex-direction:column;gap:6px;}
+  .field-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:0;}
+  @media (min-width:560px){ .field-grid{grid-template-columns:1fr 1fr;} }
+
+  label{font-size:13px;font-weight:700;color:var(--text-muted);}
+  input[type="text"],input[type="number"],input[type="month"]{
+    width:100%;
+    padding:13px 14px;
+    border-radius:var(--radius-md);
+    border:1.5px solid var(--border);
+    background:var(--blue-50);
+    color:var(--text);
+    font-size:16px;
+    font-family:inherit;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input:focus{
+    outline:none;
+    border-color:var(--blue-600);
+    box-shadow:0 0 0 3px var(--blue-100);
+  }
+  .error-msg{
+    color:var(--danger);
+    background:var(--danger-bg);
+    border-radius:var(--radius-md);
+    padding:10px 12px;
+    font-size:13.5px;
+    font-weight:600;
+    margin:6px 0 14px;
+  }
+
+  .cliente-info{
+    margin:2px 0 0;
+    font-size:12.5px;
+    font-weight:600;
+    padding:8px 10px;
+    border-radius:var(--radius-md);
+  }
+  .cliente-info.loading{color:var(--text-muted);background:var(--blue-50);}
+  .cliente-info.found{color:var(--success);background:var(--success-bg);}
+  .cliente-info.notfound{color:var(--text-muted);background:var(--blue-50);}
+  .cliente-info.unavailable{color:var(--text-muted);background:var(--blue-50);font-style:italic;}
+  .cliente-info .cliente-nombre{display:block;color:var(--text);font-size:13.5px;font-weight:800;margin-bottom:2px;}
+  .cliente-info.found .cliente-nombre{color:var(--blue-800);}
+
+  .btn-primary{
+    display:block;width:100%;
+    background:linear-gradient(135deg,var(--orange-600),var(--orange-500));
+    color:#fff;border:none;border-radius:var(--radius-md);
+    font-weight:800;font-size:16.5px;letter-spacing:.02em;
+    padding:16px;cursor:pointer;
+    box-shadow:0 8px 18px rgba(245,114,10,0.32);
+    transition:transform .1s, box-shadow .1s;
+  }
+  .btn-primary:active{transform:translateY(1px);box-shadow:0 4px 10px rgba(245,114,10,0.28);}
+  .btn-secondary,.btn-outline{
+    flex:1 1 160px;
+    padding:14px 16px;border-radius:var(--radius-md);
+    font-weight:700;font-size:14.5px;cursor:pointer;
+  }
+  .btn-secondary{background:var(--blue-700);color:#fff;border:none;}
+  .btn-outline{background:transparent;color:var(--blue-700);border:1.5px solid var(--blue-700);}
+  :root[data-theme="dark"] .btn-outline{color:#7FA8FF;border-color:#7FA8FF;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .btn-outline{color:#7FA8FF;border-color:#7FA8FF;} }
+  .actions-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;}
+
+  /* Stat tiles */
+  .stats-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+  }
+  @media (min-width:640px){ .stats-grid{grid-template-columns:repeat(4,1fr);} }
+  .stat{
+    background:var(--blue-50);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:14px 12px;
+    text-align:center;
+  }
+  .stat .stat-label{font-size:11.5px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px;}
+  .stat .stat-value{font-size:19px;font-weight:800;color:var(--blue-800);}
+  :root[data-theme="dark"] .stat .stat-value{color:#EAF0FB;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .stat .stat-value{color:#EAF0FB;} }
+  .stat.up .stat-value{color:var(--danger);}
+  .stat.down .stat-value{color:var(--success);}
+  .stat .stat-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+  .badge-range{
+    display:inline-block;margin-top:14px;
+    background:var(--orange-100);color:var(--orange-600);
+    font-weight:800;font-size:12.5px;letter-spacing:.02em;
+    padding:7px 14px;border-radius:999px;
+  }
+
+  /* Alert card */
+  .alert-card{border-left:6px solid var(--blue-600);}
+  .alert-card.warn{border-left-color:var(--orange-600);background:var(--orange-100);}
+  .alert-card.danger{border-left-color:var(--danger);background:var(--danger-bg);}
+  .alert-card.good{border-left-color:var(--success);background:var(--success-bg);}
+  .alert-title{font-weight:800;font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;}
+  .alert-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;font-weight:800;font-size:17px;color:var(--blue-800);}
+  :root[data-theme="dark"] .alert-flow{color:#EAF0FB;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .alert-flow{color:#EAF0FB;} }
+  .alert-flow .arrow{color:var(--orange-600);font-size:20px;}
+  .alert-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+  .chip{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:999px;padding:8px 14px;font-weight:700;font-size:13px;
+  }
+  .chip.neg{color:var(--success);}
+  .chip.pos{color:var(--danger);}
+
+  /* Table */
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{width:100%;border-collapse:collapse;min-width:560px;font-size:13.5px;}
+  thead th{
+    text-align:right;background:var(--blue-700);color:#fff;
+    padding:10px 10px;font-weight:700;font-size:12.5px;text-transform:uppercase;letter-spacing:.02em;
+  }
+  thead th:first-child{text-align:left;border-radius:10px 0 0 0;}
+  thead th:last-child{border-radius:0 10px 0 0;}
+  tbody td{padding:10px;text-align:right;border-bottom:1px solid var(--border);}
+  tbody td:first-child{text-align:left;font-weight:700;color:var(--text);}
+  tbody tr:nth-child(even){background:var(--blue-50);}
+  tfoot td{padding:12px 10px;text-align:right;font-weight:800;background:var(--blue-100);color:var(--blue-800);border-top:2px solid var(--blue-700);}
+  :root[data-theme="dark"] tfoot td{color:#EAF0FB;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) tfoot td{color:#EAF0FB;} }
+  tfoot td:first-child{text-align:left;}
+  .rate-col{color:var(--text-muted);font-weight:600;}
+
+  #detailExtra{margin-top:16px;padding-top:14px;border-top:1px dashed var(--border);}
+  #detailExtra h4{margin:0 0 8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);}
+  #detailExtra ul{margin:0 0 12px;padding-left:18px;font-size:13px;}
+  #detailExtra li{margin-bottom:4px;}
+
+  /* Chart */
+  .chart-wrap{display:grid;grid-template-columns:1fr;gap:22px;}
+  @media (min-width:640px){ .chart-wrap{grid-template-columns:1fr 1fr;} }
+  .chart-block h3{margin:0 0 8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);text-align:center;}
+  .chart-block svg{width:100%;height:auto;display:block;}
+  .legend{display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:12px;color:var(--text-muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+  .conclusion-card p{margin:0;font-size:15px;line-height:1.65;}
+  .conclusion-card{background:var(--blue-50);}
+
+  .footer{text-align:center;color:var(--text-muted);font-size:11.5px;padding:26px 12px 10px;}
+
+  @media print{
+    body{background:#fff;}
+    .no-print{display:none !important;}
+    .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid;}
+    .topbar-strip{display:none !important;}
+    .topbar-main{box-shadow:none;padding:6px 0;border-bottom:2px solid var(--orange-600);}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar-strip">Herramienta interna de Oficinas Comerciales — Edesur Dominicana, S.A.</div>
+  <div class="topbar-main">
+    <div class="brand">
+      <div class="brand-row">
+        <img class="logo-img" src="data:image/png;base64,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" alt="Edesur Dominicana">
+      </div>
+      <span class="brand-caption">Edesur Dominicana, S.A. · Oficinas Comerciales</span>
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1>Calculadora Comparativa de Facturación BTS-1</h1>
+    <p class="subtitle">Conoce tu Factura, Paga lo Justo.</p>
+  </section>
+
+  <section class="card" id="clientCard">
+    <h2 class="card-title">Datos del Cliente</h2>
+
+    <div class="examples-row no-print">
+      <button type="button" class="btn-link" id="btnExample1">Ver ejemplo: 300 → 447 kWh</button>
+      <button type="button" class="btn-link" id="btnExample2">Ver ejemplo: 470 → 701 kWh</button>
+    </div>
+
+    <form id="calcForm" novalidate>
+      <div class="field">
+        <label for="contrato">Número de contrato (NIC)</label>
+        <input type="text" id="contrato" inputmode="numeric" placeholder="Ej. 7506735" autocomplete="off" maxlength="7">
+        <p class="cliente-info" id="clienteInfo" hidden></p>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label for="periodoAnterior">Período anterior</label>
+          <input type="month" id="periodoAnterior">
+        </div>
+        <div class="field">
+          <label for="consumoAnterior">Consumo anterior (kWh)</label>
+          <input type="number" id="consumoAnterior" min="0" step="1" inputmode="decimal" placeholder="Ej. 300">
+        </div>
+      </div>
+
+      <div class="field-grid" style="margin-top:14px;">
+        <div class="field">
+          <label for="periodoActual">Período actual</label>
+          <input type="month" id="periodoActual">
+        </div>
+        <div class="field">
+          <label for="consumoActual">Consumo actual (kWh)</label>
+          <input type="number" id="consumoActual" min="0" step="1" inputmode="decimal" placeholder="Ej. 447">
+        </div>
+      </div>
+
+      <p class="error-msg" id="errorMsg" hidden></p>
+
+      <div style="margin-top:6px;">
+        <button type="submit" class="btn-primary">Calcular Comparativo</button>
+      </div>
+    </form>
+  </section>
+
+  <section id="resultsSection" hidden>
+
+    <section class="card">
+      <h2 class="card-title">Resultado Principal</h2>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-label">Consumo anterior</div>
+          <div class="stat-value" id="statConsAnt">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Consumo actual</div>
+          <div class="stat-value" id="statConsAct">—</div>
+        </div>
+        <div class="stat" id="statVarKwhBox">
+          <div class="stat-label">Variación de consumo</div>
+          <div class="stat-value" id="statVarKwh">—</div>
+        </div>
+        <div class="stat" id="statPctKwhBox">
+          <div class="stat-label">% variación consumo</div>
+          <div class="stat-value" id="statPctKwh">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Importe anterior</div>
+          <div class="stat-value" id="statImpAnt">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Importe actual</div>
+          <div class="stat-value" id="statImpAct">—</div>
+        </div>
+        <div class="stat" id="statVarImpBox">
+          <div class="stat-label">Variación de factura</div>
+          <div class="stat-value" id="statVarImp">—</div>
+        </div>
+        <div class="stat" id="statPctImpBox">
+          <div class="stat-label">% variación factura</div>
+          <div class="stat-value" id="statPctImp">—</div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <span class="badge-range" id="badgeRange"></span>
+      </div>
+    </section>
+
+    <section class="card alert-card" id="alertCard">
+      <p class="alert-title" id="alertTitle">¿Qué cambió?</p>
+      <p id="alertText"></p>
+      <div class="alert-flow" id="alertFlow"></div>
+      <div class="alert-chips" id="alertChips"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title-row">
+        <h2 class="card-title">Comparativo por Escala Tarifaria</h2>
+        <button type="button" class="btn-link no-print" id="btnDetail">Ver detalle</button>
+      </div>
+      <div class="table-scroll">
+        <table id="scaleTable">
+          <thead>
+            <tr>
+              <th>Escala</th>
+              <th>Tarifa</th>
+              <th>Consumo anterior</th>
+              <th>Importe anterior</th>
+              <th>Consumo actual</th>
+              <th>Importe actual</th>
+            </tr>
+          </thead>
+          <tbody id="scaleTableBody"></tbody>
+          <tfoot>
+            <tr>
+              <td>TOTAL</td>
+              <td></td>
+              <td id="totConsAnt"></td>
+              <td id="totImpAnt"></td>
+              <td id="totConsAct"></td>
+              <td id="totImpAct"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div id="detailExtra" hidden>
+        <h4>Cálculo — período anterior</h4>
+        <ul id="detailAnt"></ul>
+        <h4>Cálculo — período actual</h4>
+        <ul id="detailAct"></ul>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Comparativo Visual</h2>
+      <div class="chart-wrap">
+        <div class="chart-block">
+          <h3>Consumo (kWh)</h3>
+          <svg id="chartConsumo" viewBox="0 0 260 190"></svg>
+          <div class="legend">
+            <span><i style="background:#1B57A6"></i> Anterior</span>
+            <span><i style="background:#FD6B0E"></i> Actual</span>
+          </div>
+        </div>
+        <div class="chart-block">
+          <h3>Importe Facturado (RD$)</h3>
+          <svg id="chartImporte" viewBox="0 0 260 190"></svg>
+          <div class="legend">
+            <span><i style="background:#1B57A6"></i> Anterior</span>
+            <span><i style="background:#FD6B0E"></i> Actual</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card conclusion-card">
+      <h2 class="card-title">Conclusión</h2>
+      <p id="conclusionText"></p>
+    </section>
+
+    <div class="actions-row no-print">
+      <button type="button" class="btn-secondary" id="btnNewClient">Nuevo Cliente</button>
+      <button type="button" class="btn-outline" id="btnPrint">Imprimir / Compartir</button>
+    </div>
+  </section>
+
+  <p class="footer">
+    Herramienta interna de apoyo comercial — Edesur Dominicana. Tarifa BTS-1, precios de transición sin variación desde 2022. Uso exclusivo para fines explicativos frente al cliente.
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var RANGES = [
+    { key:'r1', label:'0–200 kWh',   rate:6.05 },
+    { key:'r2', label:'201–300 kWh', rate:8.59 },
+    { key:'r3', label:'301–700 kWh', rate:12.89 },
+    { key:'r4', label:'Mayor de 700 kWh', rate:13.09 }
+  ];
+  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+  function getRangeIndex(kwh){
+    if (kwh <= 200) return 0;
+    if (kwh <= 300) return 1;
+    if (kwh <= 700) return 2;
+    return 3;
+  }
+
+  // Reproduces the reference document's logic: brackets 0-200 / 201-300 / 301-700
+  // are billed progressively (tiered), but crossing above 700 kWh applies the
+  // top-bracket rate to the ENTIRE consumption (the "umbral de 700 kWh" effect
+  // shown in the reference examples).
+  function calcBilling(kwhRaw){
+    var kwh = Math.max(0, Number(kwhRaw) || 0);
+    var dist = [0,0,0,0];
+    var amounts = [0,0,0,0];
+    if (kwh > 700){
+      dist[3] = kwh;
+      amounts[3] = kwh * RANGES[3].rate;
+    } else {
+      var r1 = Math.min(kwh, 200);
+      var r2 = Math.min(Math.max(kwh - 200, 0), 100);
+      var r3 = Math.max(kwh - 300, 0);
+      dist[0] = r1; dist[1] = r2; dist[2] = r3;
+      amounts[0] = r1 * RANGES[0].rate;
+      amounts[1] = r2 * RANGES[1].rate;
+      amounts[2] = r3 * RANGES[2].rate;
+    }
+    var total = amounts[0] + amounts[1] + amounts[2] + amounts[3];
+    return { kwh: kwh, dist: dist, amounts: amounts, total: total, rangeIndex: getRangeIndex(kwh) };
+  }
+
+  function fmtInt(n){
+    return Math.round(n).toLocaleString('en-US');
+  }
+  function fmtKwh(n){
+    return fmtInt(n) + ' kWh';
+  }
+  function fmtMoney(n){
+    var v = Math.abs(n);
+    return 'RD$' + v.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  }
+  function fmtMoneySigned(n){
+    var sign = n > 0 ? '+' : (n < 0 ? '-' : '');
+    return sign + fmtMoney(n);
+  }
+  function fmtPctSigned(n){
+    if (n === null || !isFinite(n)) return 'N/D';
+    var r = Math.round(n);
+    var sign = r > 0 ? '+' : '';
+    return sign + r + '%';
+  }
+  function fmtPctAbs(n){
+    if (n === null || !isFinite(n)) return 'N/D';
+    return Math.abs(Math.round(n)) + '%';
+  }
+  function formatPeriodo(value){
+    if (!value) return '';
+    var parts = value.split('-');
+    var idx = parseInt(parts[1], 10) - 1;
+    if (idx < 0 || idx > 11) return value;
+    return MESES[idx] + ' ' + parts[0];
+  }
+
+  // ---- DOM refs ----
+  var form = document.getElementById('calcForm');
+  var errorMsg = document.getElementById('errorMsg');
+  var resultsSection = document.getElementById('resultsSection');
+  var inputContrato = document.getElementById('contrato');
+  var inputPerAnt = document.getElementById('periodoAnterior');
+  var inputConsAnt = document.getElementById('consumoAnterior');
+  var inputPerAct = document.getElementById('periodoActual');
+  var inputConsAct = document.getElementById('consumoActual');
+  var clienteInfoEl = document.getElementById('clienteInfo');
+
+  var hasCalculated = false;
+
+  // ---- Búsqueda de cliente por NIC (base de clientes fragmentada en data/shard_XXX.json) ----
+  var CLIENTE_DATA_BASE = 'data/';
+  var clienteShardCache = {};
+  var clienteLookupTimer = null;
+  var clienteLookupUnavailable = false;
+
+  function escapeHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+
+  function setClienteInfo(state, html){
+    clienteInfoEl.className = 'cliente-info ' + state;
+    clienteInfoEl.innerHTML = html;
+    clienteInfoEl.hidden = false;
+  }
+
+  function clearClienteInfo(){
+    clienteInfoEl.hidden = true;
+    clienteInfoEl.innerHTML = '';
+    clienteInfoEl.className = 'cliente-info';
+  }
+
+  function applyClienteRecord(nic, shardData){
+    var rec = shardData ? shardData[nic] : null;
+    if (rec){
+      var nombre = rec[0], tarifa = rec[1];
+      setClienteInfo('found',
+        '<span class="cliente-nombre">' + escapeHtml(nombre || 'Cliente sin nombre registrado') + '</span>' +
+        'Tarifa contratada: ' + escapeHtml(tarifa || 'N/D'));
+    } else {
+      setClienteInfo('notfound', 'No se encontró este número de contrato en la base de clientes.');
+    }
+  }
+
+  function lookupCliente(nic){
+    if (clienteLookupUnavailable) return;
+    var shardIdx = Number(nic) % 1000;
+    var shardKey = (shardIdx < 100 ? (shardIdx < 10 ? '00' + shardIdx : '0' + shardIdx) : '' + shardIdx);
+    var cached = clienteShardCache[shardKey];
+
+    if (cached !== undefined){
+      applyClienteRecord(nic, cached);
+      return;
+    }
+
+    setClienteInfo('loading', 'Buscando cliente…');
+    fetch(CLIENTE_DATA_BASE + 'shard_' + shardKey + '.json')
+      .then(function(resp){
+        if (!resp.ok) throw new Error('http ' + resp.status);
+        return resp.json();
+      })
+      .then(function(data){
+        clienteShardCache[shardKey] = data;
+        applyClienteRecord(nic, data);
+      })
+      .catch(function(){
+        clienteLookupUnavailable = true;
+        setClienteInfo('unavailable', 'La búsqueda de clientes no está disponible en este momento (requiere que la herramienta esté publicada en un enlace, por ejemplo GitHub Pages, en vez de abrirse como archivo local).');
+      });
+  }
+
+  inputContrato.addEventListener('input', function(){
+    var v = inputContrato.value.trim();
+    if (clienteLookupTimer) clearTimeout(clienteLookupTimer);
+    if (!/^[0-9]{6,7}$/.test(v)){
+      clearClienteInfo();
+      return;
+    }
+    clienteLookupTimer = setTimeout(function(){ lookupCliente(v); }, 300);
+  });
+
+  function readInputs(){
+    return {
+      contrato: inputContrato.value.trim(),
+      perAnt: inputPerAnt.value,
+      consAnt: inputConsAnt.value,
+      perAct: inputPerAct.value,
+      consAct: inputConsAct.value
+    };
+  }
+
+  function validate(vals){
+    if (vals.consAnt === '' || vals.consAct === ''){
+      return 'Por favor complete el consumo anterior y el consumo actual para calcular.';
+    }
+    var a = Number(vals.consAnt), b = Number(vals.consAct);
+    if (isNaN(a) || isNaN(b)){
+      return 'El consumo debe ser un valor numérico.';
+    }
+    if (a < 0 || b < 0){
+      return 'El consumo no puede ser un valor negativo.';
+    }
+    return null;
+  }
+
+  function setStat(box, valueEl, text, direction){
+    valueEl.textContent = text;
+    box.classList.remove('up','down');
+    if (direction === 'up') box.classList.add('up');
+    if (direction === 'down') box.classList.add('down');
+  }
+
+  function renderTable(billAnt, billAct){
+    var tbody = document.getElementById('scaleTableBody');
+    tbody.innerHTML = '';
+    RANGES.forEach(function(r, i){
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + r.label + '</td>' +
+        '<td class="rate-col">RD$' + r.rate.toFixed(2) + '</td>' +
+        '<td>' + fmtInt(billAnt.dist[i]) + '</td>' +
+        '<td>' + fmtMoney(billAnt.amounts[i]) + '</td>' +
+        '<td>' + fmtInt(billAct.dist[i]) + '</td>' +
+        '<td>' + fmtMoney(billAct.amounts[i]) + '</td>';
+      tbody.appendChild(tr);
+    });
+    document.getElementById('totConsAnt').textContent = fmtInt(billAnt.kwh);
+    document.getElementById('totImpAnt').textContent = fmtMoney(billAnt.total);
+    document.getElementById('totConsAct').textContent = fmtInt(billAct.kwh);
+    document.getElementById('totImpAct').textContent = fmtMoney(billAct.total);
+
+    var detAnt = document.getElementById('detailAnt');
+    var detAct = document.getElementById('detailAct');
+    detAnt.innerHTML = '';
+    detAct.innerHTML = '';
+    RANGES.forEach(function(r, i){
+      if (billAnt.dist[i] > 0){
+        var li = document.createElement('li');
+        li.textContent = r.label + ': ' + fmtInt(billAnt.dist[i]) + ' kWh × RD$' + r.rate.toFixed(2) + ' = ' + fmtMoney(billAnt.amounts[i]);
+        detAnt.appendChild(li);
+      }
+      if (billAct.dist[i] > 0){
+        var li2 = document.createElement('li');
+        li2.textContent = r.label + ': ' + fmtInt(billAct.dist[i]) + ' kWh × RD$' + r.rate.toFixed(2) + ' = ' + fmtMoney(billAct.amounts[i]);
+        detAct.appendChild(li2);
+      }
+    });
+  }
+
+  function renderAlert(billAnt, billAct, diffKwh, diffImp){
+    var card = document.getElementById('alertCard');
+    var title = document.getElementById('alertTitle');
+    var text = document.getElementById('alertText');
+    var flow = document.getElementById('alertFlow');
+    var chips = document.getElementById('alertChips');
+
+    card.classList.remove('warn','danger','good');
+    flow.innerHTML = fmtKwh(billAnt.kwh) + ' <span class="arrow">→</span> ' + fmtKwh(billAct.kwh);
+
+    var crossedInto700 = billAct.rangeIndex === 3 && billAnt.rangeIndex < 3;
+
+    if (crossedInto700){
+      card.classList.add('danger');
+      title.textContent = '⚠️ Cruce del umbral de 700 kWh';
+      text.textContent = 'De acuerdo con la tarifa BTS-1, al superar los 700 kWh la totalidad del consumo pasa a facturarse a la tarifa del tramo superior (RD$13.09 por kWh), en lugar de aplicarse de forma escalonada. Esto puede producir un aumento considerable en el importe facturado.';
+    } else if (billAct.rangeIndex > billAnt.rangeIndex){
+      card.classList.add('warn');
+      title.textContent = '¿Qué cambió?';
+      text.textContent = 'El consumo aumentó en ' + fmtInt(diffKwh) + ' kWh y pasó del rango de ' + RANGES[billAnt.rangeIndex].label + ' al rango de ' + RANGES[billAct.rangeIndex].label + '.';
+    } else if (billAct.rangeIndex < billAnt.rangeIndex){
+      card.classList.add('good');
+      title.textContent = 'Consumo reducido';
+      text.textContent = 'El consumo disminuyó en ' + fmtInt(Math.abs(diffKwh)) + ' kWh y pasó del rango de ' + RANGES[billAnt.rangeIndex].label + ' al rango de ' + RANGES[billAct.rangeIndex].label + ', lo que ayudó a reducir el importe facturado.';
+    } else {
+      card.classList.add(diffKwh >= 0 ? 'warn' : 'good');
+      title.textContent = '¿Qué cambió?';
+      text.textContent = 'El consumo se mantuvo dentro del mismo rango tarifario (' + RANGES[billAct.rangeIndex].label + '), por lo que no hubo cambio de escala, aunque el importe varía en proporción al consumo.';
+    }
+
+    var pctK = billAnt.kwh > 0 ? (diffKwh / billAnt.kwh) * 100 : null;
+    var pctI = billAnt.total > 0 ? (diffImp / billAnt.total) * 100 : null;
+    chips.innerHTML =
+      '<span class="chip ' + (diffKwh >= 0 ? 'pos' : 'neg') + '">' + fmtPctSigned(pctK) + ' de consumo</span>' +
+      '<span class="chip ' + (diffImp >= 0 ? 'pos' : 'neg') + '">' + fmtMoneySigned(diffImp) + ' en facturación</span>';
+  }
+
+  function drawBarChart(svg, dataA, dataB, colorA, colorB, formatter){
+    var W = 260, H = 190;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var ns = 'http://www.w3.org/2000/svg';
+    var maxVal = Math.max(dataA, dataB, 1);
+    var baseY = 150;
+    var topPad = 26;
+    var barW = 56;
+    var gap = 34;
+    var groupWidth = barW * 2 + gap;
+    var startX = (W - groupWidth) / 2;
+
+    function addRect(x, val, color){
+      var h = Math.max(2, (val / maxVal) * (baseY - topPad));
+      var y = baseY - h;
+      var rect = document.createElementNS(ns, 'rect');
+      rect.setAttribute('x', x);
+      rect.setAttribute('y', y);
+      rect.setAttribute('width', barW);
+      rect.setAttribute('height', h);
+      rect.setAttribute('rx', 6);
+      rect.setAttribute('fill', color);
+      svg.appendChild(rect);
+
+      var label = document.createElementNS(ns, 'text');
+      label.setAttribute('x', x + barW / 2);
+      label.setAttribute('y', y - 8);
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('font-size', '12');
+      label.setAttribute('font-weight', '700');
+      label.setAttribute('fill', 'currentColor');
+      label.textContent = formatter(val);
+      svg.appendChild(label);
+    }
+
+    var baseLine = document.createElementNS(ns, 'line');
+    baseLine.setAttribute('x1', 10);
+    baseLine.setAttribute('y1', baseY);
+    baseLine.setAttribute('x2', W - 10);
+    baseLine.setAttribute('y2', baseY);
+    baseLine.setAttribute('stroke', 'currentColor');
+    baseLine.setAttribute('stroke-opacity', '0.25');
+    svg.appendChild(baseLine);
+
+    addRect(startX, dataA, colorA);
+    addRect(startX + barW + gap, dataB, colorB);
+
+    var labelA = document.createElementNS(ns, 'text');
+    labelA.setAttribute('x', startX + barW / 2);
+    labelA.setAttribute('y', baseY + 18);
+    labelA.setAttribute('text-anchor', 'middle');
+    labelA.setAttribute('font-size', '11');
+    labelA.setAttribute('fill', 'currentColor');
+    labelA.setAttribute('fill-opacity', '0.65');
+    labelA.textContent = 'Anterior';
+    svg.appendChild(labelA);
+
+    var labelB = document.createElementNS(ns, 'text');
+    labelB.setAttribute('x', startX + barW + gap + barW / 2);
+    labelB.setAttribute('y', baseY + 18);
+    labelB.setAttribute('text-anchor', 'middle');
+    labelB.setAttribute('font-size', '11');
+    labelB.setAttribute('fill', 'currentColor');
+    labelB.setAttribute('fill-opacity', '0.65');
+    labelB.textContent = 'Actual';
+    svg.appendChild(labelB);
+
+    svg.style.color = 'var(--text)';
+  }
+
+  function buildConclusion(billAnt, billAct, diffKwh, diffImp, perAntLabel, perActLabel){
+    var pctK = billAnt.kwh > 0 ? Math.abs((diffKwh / billAnt.kwh) * 100) : null;
+    var pctI = billAnt.total > 0 ? Math.abs((diffImp / billAnt.total) * 100) : null;
+    var periodoFrag = (perAntLabel && perActLabel) ? (' entre ' + perAntLabel + ' y ' + perActLabel) : '';
+    var sentence;
+
+    if (diffKwh > 0){
+      sentence = 'Conclusión: el consumo' + periodoFrag + ' aumentó ' + fmtPctAbs(pctK) + ', pasando de ' + fmtInt(billAnt.kwh) + ' a ' + fmtInt(billAct.kwh) + ' kWh. ';
+      if (billAct.rangeIndex > billAnt.rangeIndex){
+        sentence += 'Este incremento hizo que parte del consumo se ubicara en el rango de ' + RANGES[billAct.rangeIndex].label + ', provocando que el importe de energía aumentara en ' + fmtMoney(diffImp) + ', equivalente a un ' + fmtPctAbs(pctI) + '.';
+      } else {
+        sentence += 'El importe de energía aumentó ' + fmtMoney(diffImp) + ', equivalente a un ' + fmtPctAbs(pctI) + ', dentro del mismo rango tarifario.';
+      }
+    } else if (diffKwh < 0){
+      sentence = 'Conclusión: el consumo' + periodoFrag + ' disminuyó ' + fmtPctAbs(pctK) + ', pasando de ' + fmtInt(billAnt.kwh) + ' a ' + fmtInt(billAct.kwh) + ' kWh. ';
+      sentence += 'Esta reducción representa un ahorro de ' + fmtMoney(Math.abs(diffImp)) + ' en la factura, equivalente a un ' + fmtPctAbs(pctI) + '.';
+    } else {
+      sentence = 'Conclusión: el consumo se mantuvo igual (' + fmtInt(billAct.kwh) + ' kWh)' + periodoFrag + ', por lo que el importe de energía no presentó variación.';
+    }
+    return sentence;
+  }
+
+  function computeAndRender(){
+    var vals = readInputs();
+    var err = validate(vals);
+    if (err){
+      errorMsg.textContent = err;
+      errorMsg.hidden = false;
+      resultsSection.hidden = true;
+      return;
+    }
+    errorMsg.hidden = true;
+
+    var billAnt = calcBilling(vals.consAnt);
+    var billAct = calcBilling(vals.consAct);
+    var diffKwh = billAct.kwh - billAnt.kwh;
+    var diffImp = billAct.total - billAnt.total;
+    var pctK = billAnt.kwh > 0 ? (diffKwh / billAnt.kwh) * 100 : null;
+    var pctI = billAnt.total > 0 ? (diffImp / billAnt.total) * 100 : null;
+
+    document.getElementById('statConsAnt').textContent = fmtKwh(billAnt.kwh);
+    document.getElementById('statConsAct').textContent = fmtKwh(billAct.kwh);
+    setStat(document.getElementById('statVarKwhBox'), document.getElementById('statVarKwh'),
+      (diffKwh >= 0 ? '+' : '') + fmtInt(diffKwh) + ' kWh', diffKwh > 0 ? 'up' : (diffKwh < 0 ? 'down' : null));
+    setStat(document.getElementById('statPctKwhBox'), document.getElementById('statPctKwh'),
+      fmtPctSigned(pctK), diffKwh > 0 ? 'up' : (diffKwh < 0 ? 'down' : null));
+    document.getElementById('statImpAnt').textContent = fmtMoney(billAnt.total);
+    document.getElementById('statImpAct').textContent = fmtMoney(billAct.total);
+    setStat(document.getElementById('statVarImpBox'), document.getElementById('statVarImp'),
+      fmtMoneySigned(diffImp), diffImp > 0 ? 'up' : (diffImp < 0 ? 'down' : null));
+    setStat(document.getElementById('statPctImpBox'), document.getElementById('statPctImp'),
+      fmtPctSigned(pctI), diffImp > 0 ? 'up' : (diffImp < 0 ? 'down' : null));
+
+    document.getElementById('badgeRange').textContent = 'Escala actual: ' + RANGES[billAct.rangeIndex].label;
+
+    renderTable(billAnt, billAct);
+    renderAlert(billAnt, billAct, diffKwh, diffImp);
+
+    drawBarChart(document.getElementById('chartConsumo'), billAnt.kwh, billAct.kwh, '#1B57A6', '#FD6B0E', fmtKwh);
+    drawBarChart(document.getElementById('chartImporte'), billAnt.total, billAct.total, '#1B57A6', '#FD6B0E', fmtMoney);
+
+    var perAntLabel = formatPeriodo(vals.perAnt);
+    var perActLabel = formatPeriodo(vals.perAct);
+    document.getElementById('conclusionText').textContent = buildConclusion(billAnt, billAct, diffKwh, diffImp, perAntLabel, perActLabel);
+
+    resultsSection.hidden = false;
+    hasCalculated = true;
+    if (window.innerWidth < 900){
+      resultsSection.scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    computeAndRender();
+  });
+
+  [inputConsAnt, inputConsAct, inputPerAnt, inputPerAct].forEach(function(el){
+    el.addEventListener('input', function(){
+      if (hasCalculated) computeAndRender();
+    });
+  });
+
+  document.getElementById('btnDetail').addEventListener('click', function(){
+    var extra = document.getElementById('detailExtra');
+    extra.hidden = !extra.hidden;
+    this.textContent = extra.hidden ? 'Ver detalle' : 'Ocultar detalle';
+  });
+
+  document.getElementById('btnNewClient').addEventListener('click', function(){
+    form.reset();
+    hasCalculated = false;
+    resultsSection.hidden = true;
+    errorMsg.hidden = true;
+    clearClienteInfo();
+    inputContrato.focus();
+    window.scrollTo({ top:0, behavior:'smooth' });
+  });
+
+  document.getElementById('btnPrint').addEventListener('click', function(){
+    window.print();
+  });
+
+  function loadExample(contrato, perAnt, consAnt, perAct, consAct){
+    inputContrato.value = contrato;
+    inputPerAnt.value = perAnt;
+    inputConsAnt.value = consAnt;
+    inputPerAct.value = perAct;
+    inputConsAct.value = consAct;
+    computeAndRender();
+  }
+
+  document.getElementById('btnExample1').addEventListener('click', function(){
+    loadExample('DEMO-001', '2026-04', 300, '2026-05', 447);
+  });
+  document.getElementById('btnExample2').addEventListener('click', function(){
+    loadExample('DEMO-002', '2026-06', 470, '2026-07', 701);
+  });
+
+})();
+</script>
+</body>
+</html>
