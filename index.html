@@ -621,8 +621,11 @@
   }
 
   function tryAutoFillConsumos(){
-    autoFillUno(inputPerAnt, inputConsAnt, hintAnt);
-    autoFillUno(inputPerAct, inputConsAct, hintAct);
+    // Autocompletado de consumo DESHABILITADO a pedido: aunque el NIC tenga historial de
+    // consumo en la base de datos, el consumo anterior y actual siempre los escribe el
+    // agente manualmente. Se conserva únicamente el recálculo en vivo si ya había un
+    // resultado visible y el agente cambia el período (comportamiento previo sin relación
+    // con el autocompletado).
     if (hasCalculated) computeAndRender();
   }
 
