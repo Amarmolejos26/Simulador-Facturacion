@@ -844,21 +844,55 @@
       '<span class="chip ' + (diffImp >= 0 ? 'pos' : 'neg') + '">' + fmtMoneySigned(diffImp) + ' en facturación</span>';
   }
 
-  function drawBarChart(svg, dataA, dataB, colorA, colorB, formatter){
+  // Calcula, para ambas gráficas (consumo e importe) a la vez, una altura de referencia
+  // compartida para la barra "Anterior" (100%), de modo que la barra "Actual" de cada
+  // gráfica crezca en la MISMA escala visual según su propio porcentaje de aumento.
+  // Así, si el importe aumentó más (p. ej. 250%) que el consumo (p. ej. 120%), la barra
+  // naranja de importe queda visiblemente más alta que la de consumo, en vez de que ambas
+  // se estiren siempre hasta el mismo tope por estar normalizadas cada una por su cuenta.
+  function calcRefHeight(maxHeight, pares){
+    var ratios = [];
+    for (var i = 0; i < pares.length; i++){
+      var a = pares[i][0], b = pares[i][1];
+      if (a > 0) ratios.push(b / a);
+    }
+    var maxRatio = ratios.length ? Math.max.apply(null, ratios.concat([1])) : 1;
+    var ref = maxHeight / maxRatio;
+    return Math.min(Math.max(ref, 8), maxHeight);
+  }
+
+  function drawBarChart(svg, dataA, dataB, colorA, colorB, formatter, refHeight){
     var W = 260, H = 190;
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     while (svg.firstChild) svg.removeChild(svg.firstChild);
     var ns = 'http://www.w3.org/2000/svg';
-    var maxVal = Math.max(dataA, dataB, 1);
     var baseY = 150;
     var topPad = 26;
+    var maxHeight = baseY - topPad;
     var barW = 56;
     var gap = 34;
     var groupWidth = barW * 2 + gap;
     var startX = (W - groupWidth) / 2;
 
-    function addRect(x, val, color){
-      var h = Math.max(2, (val / maxVal) * (baseY - topPad));
+    // Altura de la barra "Anterior" (referencia = 100%) y de la barra "Actual", en la misma
+    // escala compartida entre ambas gráficas. Si no hay valor anterior (p. ej. consumo cero),
+    // no hay porcentaje de aumento que calcular y se usa el máximo de las dos barras de esta
+    // gráfica únicamente, como respaldo.
+    var hA, hB;
+    if (dataA > 0){
+      hA = refHeight;
+      hB = refHeight * (dataB / dataA);
+    } else {
+      var maxVal = Math.max(dataA, dataB, 1);
+      hA = (dataA / maxVal) * maxHeight;
+      hB = (dataB / maxVal) * maxHeight;
+    }
+    hA = Math.min(Math.max(hA, 2), maxHeight);
+    hB = Math.min(Math.max(hB, 2), maxHeight);
+    var heights = { A: hA, B: hB };
+
+    function addRect(x, val, color, key){
+      var h = heights[key];
       var y = baseY - h;
       var rect = document.createElementNS(ns, 'rect');
       rect.setAttribute('x', x);
@@ -889,8 +923,8 @@
     baseLine.setAttribute('stroke-opacity', '0.25');
     svg.appendChild(baseLine);
 
-    addRect(startX, dataA, colorA);
-    addRect(startX + barW + gap, dataB, colorB);
+    addRect(startX, dataA, colorA, 'A');
+    addRect(startX + barW + gap, dataB, colorB, 'B');
 
     var labelA = document.createElementNS(ns, 'text');
     labelA.setAttribute('x', startX + barW / 2);
@@ -973,8 +1007,12 @@
     renderTable(billAnt, billAct);
     renderAlert(billAnt, billAct, diffKwh, diffImp);
 
-    drawBarChart(document.getElementById('chartConsumo'), billAnt.kwh, billAct.kwh, '#1B57A6', '#FD6B0E', fmtKwh);
-    drawBarChart(document.getElementById('chartImporte'), billAnt.total, billAct.total, '#1B57A6', '#FD6B0E', fmtMoney);
+    var chartRefHeight = calcRefHeight(150 - 26, [
+      [billAnt.kwh, billAct.kwh],
+      [billAnt.total, billAct.total]
+    ]);
+    drawBarChart(document.getElementById('chartConsumo'), billAnt.kwh, billAct.kwh, '#1B57A6', '#FD6B0E', fmtKwh, chartRefHeight);
+    drawBarChart(document.getElementById('chartImporte'), billAnt.total, billAct.total, '#1B57A6', '#FD6B0E', fmtMoney, chartRefHeight);
 
     var perAntLabel = formatPeriodo(vals.perAnt);
     var perActLabel = formatPeriodo(vals.perAct);
